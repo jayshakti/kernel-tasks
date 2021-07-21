@@ -30,7 +30,7 @@ int main(){
 			printf("Jiffies value: %lu\n", jiff);
 		}
 		else if(ch == 2){
-			ioctl(fd, PRINT_JIFFIES);
+			ioctl(fd, 0);
 		}
 		else{
 			break;
