@@ -56,14 +56,6 @@ static int __init chr_init(void){
 	cdev_init(&my_cdev, &fops);
 
 	
-/*	my_cdev = cdev_alloc();
-	if(my_cdev == NULL){
-		pr_err("cdev_alloc() failed: Error\n");
-		return -1;
-	}
-	my_cdev->owner = THIS_MODULE;
-	my_cdev->ops = &fops;
-*/
 	// Adding the device into the device table of the kernel
 	if(cdev_add(&my_cdev, dev_num, 1) < 0){
 		pr_err("cdev_add() failed: Error\n");
