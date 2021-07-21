@@ -1,4 +1,4 @@
-obj-m := my_ioctl.o
+obj-m := driver_ioctl.o
 
 KDIR := /lib/modules/$(shell uname -r)/build
 PWD := $(shell pwd)
