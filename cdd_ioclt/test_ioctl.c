@@ -8,7 +8,6 @@
 
 
 #define MAGICNO 'J'
-#define PRINT_JIFFIES _IO(MAGICNO, 'a')
 #define READ_JIFFIES _IOR(MAGICNO, 'b', unsigned long*)
 
 int main(){
