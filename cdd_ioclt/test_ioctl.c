@@ -37,7 +37,6 @@ int main(){
 			break;
 		}
 	}
-
 	printf("Application Closed: %s\n", __FILE__);
 	close(fd);
 	return 0;
