@@ -11,22 +11,25 @@ removedriver()
 	read
 	cat /proc/modules
 	read
+	make clean
+	unlink myNODE
+	rm -f user_app
 }
 
-apps()
+app()
 {
 	echo
         read -n1 -p "Compile Application (y/n) " resp
         if [ $resp == 'y' ]
         then
 		echo
-		if ( make -C ./app_test)
+		if ( make user_app)
 		then
 			echo
 			read -n1 -p "Compilation Successfull. Run app ?? (y/n) " resp
 			if [ $resp == 'y' ]
 			then
-				./app_test
+				./user_app
 			else
 				echo "Good luck"
 			fi
@@ -39,27 +42,25 @@ apps()
 
 insertdriver()
 {
-	insmod ./NEWCDD.ko
+	insmod NEWCDD.ko
 	dmesg
 	echo
 	read -p "Enter MajorNo." resp
 	major=$resp
-	unlink myNODE
-	mknod myNODE c $major 0
+	mknod ./dev/myNODE c $major 0
 	lsmod
 	read
 	cat /proc/devices
 	read
 	cat /proc/modules
 	
-#	apps ## Calling our application to compile and run ##
+	app ## Calling our application to compile and run ##
 
 	echo
 	read -n1 -p "Do u want to remove driver (y/n)" resp
 	if [ $resp == 'y' ]
 	then
 		removedriver
-		make clean
 		echo "Driver removed & cleaned !! Good Byee!"
 		echo
 	else

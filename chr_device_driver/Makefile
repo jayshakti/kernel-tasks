@@ -1,4 +1,5 @@
-obj-m := main.o
+obj-m := NEWCDD.o
+NEWCDD-objs := main.o
 
 KDIR := /lib/modules/$(shell uname -r)/build
 PWD := $(shell pwd)

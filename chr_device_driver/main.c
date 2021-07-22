@@ -45,7 +45,7 @@ static int __init helloKernel_init(void){
 
 
 static void __exit helloKernel_exit(void){
-
+	
 	//Un-allocating device number
 	unregister_chrdev_region(device_id, 1);
 	pr_info("Device un-registered successfully !! Byee Byee Kernel\n");
