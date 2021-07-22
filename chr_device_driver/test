@@ -1,0 +1,94 @@
+#! /bin/bash
+
+removedriver()
+{
+	rmmod NEWCDD
+	dmesg
+	read
+	lsmod
+	read
+	cat /proc/devices
+	read
+	cat /proc/modules
+	read
+}
+
+apps()
+{
+	echo
+        read -n1 -p "Compile Application (y/n) " resp
+        if [ $resp == 'y' ]
+        then
+		echo
+		if ( make -C ./app_test)
+		then
+			echo
+			read -n1 -p "Compilation Successfull. Run app ?? (y/n) " resp
+			if [ $resp == 'y' ]
+			then
+				./app_test
+			else
+				echo "Good luck"
+			fi
+		else
+			echo
+			echo "Compilation failed"
+		fi
+	fi
+}
+
+insertdriver()
+{
+	insmod ./NEWCDD.ko
+	dmesg
+	echo
+	read -p "Enter MajorNo." resp
+	major=$resp
+	unlink myNODE
+	mknod myNODE c $major 0
+	lsmod
+	read
+	cat /proc/devices
+	read
+	cat /proc/modules
+	
+#	apps ## Calling our application to compile and run ##
+
+	echo
+	read -n1 -p "Do u want to remove driver (y/n)" resp
+	if [ $resp == 'y' ]
+	then
+		removedriver
+		make clean
+		echo "Driver removed & cleaned !! Good Byee!"
+		echo
+	else
+		echo "Driver didn't removed!"
+		echo
+	fi
+
+
+}
+builddriver()
+{
+	if ( make )
+	then 
+		echo
+		read -n1 -p "Compilation Successfull. Do you want to insert Driver (y/n)" resp
+		if [ $resp == 'y' ]
+		then
+			insertdriver	
+		else
+			echo "Driver cleaned !! Good Byee!"
+			make clean
+			echo
+		fi
+	else
+		echo "Compilation Failed."
+	fi
+}
+
+#Starting point of the script
+builddriver
+
+######################################################################################################
