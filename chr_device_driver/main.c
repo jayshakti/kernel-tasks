@@ -1,25 +1,36 @@
 #include"headers.h"
 #include"declarations.h"
 #include"fileOperations.h"
+#define KER_SIZE 128 // kernel max size
 
-int my_open(struct inode *inode, struct file *filp){
-	pr_info("Opening...\n");
+char *ker_buff;
+static int my_open(struct inode *inode, struct file *filp){
+
+	// creating physical memory
+	if(ker_buff = kmalloc(KER_SIZE, GFP_KERNEL) == NULL){
+		pr_err("kmalloc() failed: Error");
+		return -1;
+	}
+	pr_info("Device file opened\n");
 	return 0;
 }
 
-int my_release(struct inode *inode, struct file *filp){
-	pr_info("Closing...\n");
+static int my_release(struct inode *inode, struct file *filp){
+	kfree(ker_buff);
+	pr_info("Device file closed\n");
 	return 0;
 }
 
-ssize_t my_read(struct file *filp, char __user *buff, size_t count, loff_t *lfpos){
-	pr_info("Reading...\n");
-	return 0;
+static ssize_t my_read(struct file *filp, char __user *buff, size_t len, loff_t *lfpos){
+	copy_to_user(buff, ker_buff, KER_SIZE);
+	pr_info("Data read from device\n");
+	return KER_SIZE;
 }
 
-ssize_t my_write(struct file *filp, const char __user *buff, size_t count, loff_t *lfpos){
-	pr_info("Writing...\n");
-	return 0;
+static ssize_t my_write(struct file *filp, const char __user *buff, size_t len, loff_t *lfpos){
+	copy_from_user(ker_buff, buff, len);
+	pr_info("Data written to the device: %s\n", ker_buff);
+	return len;
 }
 
 
@@ -59,5 +70,5 @@ module_exit(helloKernel_exit);
 
 // license
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Me");
-MODULE_DESCRIPTION("Testing CDD to print kernel logs on the host machine");
+MODULE_AUTHOR("JAY SHAKTI");
+MODULE_DESCRIPTION("First Char Device Driver with open, read, write & close operations");
