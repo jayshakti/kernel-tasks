@@ -4,7 +4,7 @@
 #include<fcntl.h>
 #include<string.h>
 
-#define BUFFER_LIMIT 128
+#define BUFF_LIMIT 128
 
 static int fd = -1;
 void open_dev(void){
@@ -22,9 +22,9 @@ void close_dev(void){
 	printf("Nothing to close\n");
 }
 void read_from_dev(void){
-	char buff[BUFFER_LIMIT];
+	char buff[BUFF_LIMIT];
 	memset(buff, '\0', sizeof(buff));
-	int ret = read(fd, buff, BUFFER_LIMIT);
+	int ret = read(fd, buff, BUFF_LIMIT);
 	if(ret < 0){
 		perror("read");
 	}
@@ -32,10 +32,10 @@ void read_from_dev(void){
 	printf("Read %d bytes\n",ret);
 }
 void write_to_dev(void){
-	char buff[BUFFER_LIMIT];
+	char buff[BUFF_LIMIT];
 	memset(buff, '\0', sizeof(buff));
 	printf("Start writing: ");
-	fgets(buff, BUFFER_LIMIT, stdin);
+	fgets(buff, BUFF_LIMIT, stdin);
 	int ret = write(fd, buff, sizeof(buff));
 	if(ret < 0){
 		perror("write");
@@ -47,17 +47,18 @@ int main(){
 
 
 	printf("%s: Welcome to the application\n", __func__);
+	open_dev(); /* opening the special file names as myNODE present /dev */
+	void (*func_ptr[])(void) = {close_dev, write_to_dev, read_from_dev};
 	int ch;
-	void (*func_ptr[])(void) = {open_dev, close_dev, write_to_dev, read_from_dev};
 	while(1){
 	
 		printf("\n####### OPTIONS ########\n");
-		printf("1.open\n2.close\n3.write\n4.read\n0.exit\nEnter your choice: ");
+		printf("1.close\n2.write\n3.read\n0.exit\nEnter your choice: ");
 		scanf("%d",&ch);
 		if(ch == 0){
 			exit(EXIT_SUCCESS);
 		}
-		if(ch >= 1 && ch <= 4){
+		if(ch >= 1 && ch <= 3){
 			(*func_ptr[ch-1])();
 		}
 		else{
