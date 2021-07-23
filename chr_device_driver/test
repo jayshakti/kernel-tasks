@@ -3,13 +3,11 @@
 removedriver()
 {
 	rmmod NEWCDD
-	dmesg
+	dmesg | less -10
 	read
-	lsmod
+	lsmod | head -5
 	read
 	cat /proc/devices
-	read
-	cat /proc/modules
 	read
 	make clean
 	unlink myNODE
@@ -19,7 +17,7 @@ removedriver()
 app()
 {
 	echo
-        read -n1 -p "Compile Application (y/n) " resp
+        read -p "Compile Application (y/n) " resp
         if [ $resp == 'y' ]
         then
 		echo
@@ -43,21 +41,20 @@ app()
 insertdriver()
 {
 	insmod NEWCDD.ko
-	dmesg
+	dmesg | less -6
 	echo
 	read -p "Enter MajorNo." resp
 	major=$resp
 	mknod ./dev/myNODE c $major 0
-	lsmod
+	lsmod | head -5
 	read
 	cat /proc/devices
 	read
-	cat /proc/modules
 	
 	app ## Calling our application to compile and run ##
 
 	echo
-	read -n1 -p "Do u want to remove driver (y/n)" resp
+	read -p "Do u want to remove driver (y/n)" resp
 	if [ $resp == 'y' ]
 	then
 		removedriver
@@ -75,7 +72,7 @@ builddriver()
 	if ( make )
 	then 
 		echo
-		read -n1 -p "Compilation Successfull. Do you want to insert Driver (y/n)" resp
+		read -p "Compilation Successfull. Do you want to insert Driver (y/n)" resp
 		if [ $resp == 'y' ]
 		then
 			insertdriver	
