@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<unistd.h>
+#include<sys/stat.h>
+#include<sys/types.h>
 #include<fcntl.h>
 #include<string.h>
 
@@ -8,18 +10,21 @@
 
 static int fd = -1;
 void open_dev(void){
-	fd = open("./dev/myNODE", O_RDWR);
+	fd = open("/dev/myNODE", O_RDWR);
 	if(fd < 0){
 		perror("open");
+	}else{
+		printf("Device opened successfully: fd=%d\n",fd);
 	}
-	printf("Device opened successfully\n");
 }
 void close_dev(void){
 	if(fd > 2){
 		close(fd);
 		printf("Device released successfully\n");
 	}
-	printf("Nothing to close\n");
+	else{
+		printf("Nothing to close\n");
+	}
 }
 void read_from_dev(void){
 	char buff[BUFF_LIMIT];
@@ -28,25 +33,30 @@ void read_from_dev(void){
 	if(ret < 0){
 		perror("read");
 	}
-	printf("%s\n", buff);
-	printf("Read %d bytes\n",ret);
+	else{
+		printf("%s\n", buff);
+		printf("Read %d bytes\n",ret);
+	}
 }
 void write_to_dev(void){
 	char buff[BUFF_LIMIT];
 	memset(buff, '\0', sizeof(buff));
 	printf("Start writing: ");
-	fgets(buff, BUFF_LIMIT, stdin);
+	scanf("%s",buff);
+	// fgets(buff, BUFF_LIMIT, stdin);
 	int ret = write(fd, buff, sizeof(buff));
 	if(ret < 0){
 		perror("write");
 	}
-	printf("\nWrote %d bytes\n",ret);
+	else{
+		printf("\nWrote %d bytes\n",ret);
+	}
 }
 
 int main(){
 
 
-	printf("%s: Welcome to the application\n", __func__);
+	printf("\n%s: Welcome to the application\n", __func__);
 	open_dev(); /* opening the special file names as myNODE present /dev */
 	void (*func_ptr[])(void) = {close_dev, write_to_dev, read_from_dev};
 	int ch;
