@@ -1,9 +1,10 @@
 #define DEVICE_NAME "myCDD"
-#define BUFFER_SIZE 256 // bytes
+#define KER_SIZE 128 // bytes
 
 
 dev_t device_id;
 static struct cdev my_cdev; 
+
 
 int my_open(struct inode *, struct file *);
 int my_release(struct inode *, struct file *);
