@@ -3,14 +3,13 @@
 removedriver()
 {
 	rmmod NEWCDD
-	dmesg | less -10
+	dmesg
 	read
 	lsmod | head -5
 	read
 	cat /proc/devices
 	read
 	make clean
-	unlink myNODE
 	rm -f user_app
 }
 
@@ -41,11 +40,13 @@ app()
 insertdriver()
 {
 	insmod NEWCDD.ko
-	dmesg | less -6
+	dmesg
 	echo
 	read -p "Enter MajorNo." resp
 	major=$resp
-	mknod ./dev/myNODE c $major 0
+
+	unlink /dev/myNODE
+	mknod /dev/myNODE c $major 0
 	lsmod | head -5
 	read
 	cat /proc/devices
@@ -72,7 +73,7 @@ builddriver()
 	if ( make )
 	then 
 		echo
-		read -p "Compilation Successfull. Do you want to insert Driver (y/n)" resp
+		read -n1 -p "Compilation Successfull. Do you want to insert Driver (y/n)" resp
 		if [ $resp == 'y' ]
 		then
 			insertdriver	
