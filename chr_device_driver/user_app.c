@@ -42,8 +42,8 @@ void write_to_dev(void){
 	char buff[BUFF_LIMIT];
 	memset(buff, '\0', sizeof(buff));
 	printf("Start writing: ");
-	scanf("%s",buff);
-	// fgets(buff, BUFF_LIMIT, stdin);
+	//scanf("%s",buff);
+	fgets(buff, BUFF_LIMIT, stdin);
 	int ret = write(fd, buff, sizeof(buff));
 	if(ret < 0){
 		perror("write");
